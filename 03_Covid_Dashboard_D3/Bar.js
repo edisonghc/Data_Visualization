@@ -1,115 +1,73 @@
-d3.csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv", drawBars);
+var bar_svg;
 
-function drawBars(error, data) {
-    var covid = data;
+function draw_barChart(state_data) {
 
-    var padding = 1;
-    var barHeight = 3;
-    var fontSize = 5;
+    // Set up: margins
+    var margin = { top: 10, right: 20, bottom: 135, left: 60 },
+        width = 680 - margin.left - margin.right,
+        height = 460 - margin.top - margin.bottom;
 
-    var svg = d3.select("svg");
-    var texts = svg.selectAll('text')
-        .data(covid)
-        .enter().append("text")
-        .attr('x', 0)
-        .attr('y', function (d, i) {
-            return (i + 1) * (barHeight + padding);
-        })
-        .attr('font-size', fontSize)
-        .text(function (d) {
-            return d.date;
-        });
+    var xScale = d3.scaleBand()
+        .domain(state_data.map(function (d) { return d['month']; }))
+        .range([0, width])
+        .padding(0.065);
 
-    var scaleFactor = 1e-4;
-    var rects = svg.selectAll("rect")
-        .data(covid)
+    var yScale = d3.scaleLinear()
+        .domain([0,
+            d3.max(state_data, function (d) {
+                return d.cases;
+            })]
+        )
+        .rangeRound([height, 0]);
+
+    var xAxis = d3.axisBottom().scale(xScale);
+    var yAxis = d3.axisLeft().scale(yScale);
+
+    // Create as svg canvas
+    // bar_svg = d3.select("#bar_svg").append("svg")
+    //     .attr("width", width + margin.left + margin.right)
+    //     .attr("height", height + margin.top + margin.bottom)
+    //     .append("g").enter()
+    //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    bar_svg = d3.select("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+    // append x axis
+    bar_svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis)
+        .selectAll("text")
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", "-.6em")
+        .attr("transform", "rotate(-80)");
+
+    // append y axis
+    bar_svg.append("g")
+        .attr("class", "y axis")
+        .attr("transform", "translate(0," + 0 + ")")
+        .call(yAxis)
+        .append("text");
+
+    // Create rect bars
+    bar_svg.selectAll()
+        .data(state_data)
         .enter().append("rect")
-        .attr("x", 30)
-        .attr("y", function (d, i) {
-            return padding + i * (barHeight + padding);
-        })
-        .attr("width", function (d, i) {
-            return d.cases * scaleFactor;
-        })
-        .attr("height", barHeight)
-        .style("fill", "steelblue");
-
-    /*
-    // highlight cities that populations are larger than five million
-    filterCities();
-
-    // sort cities
-    sortCities();
-
-    // Create a table
-    tabulate(["name", "population"], cities);
-
-    function filterCities() {
-        rects
-        .filter(function(d, i) {
-            return d.population > 5 * 1e6;
-        })
-        .style("fill", "red");
-    }
-
-    function sortCities() {
-        texts
-            .sort(function(a, b) {
-                return d3.ascending(a.population, b.population);
-                // return d3.descending(a.population, b.population);
-            })
-            .attr("y", function(d, i) {
-                return (i + 1) * (barHeight + padding);
-            })
-
-        rects
-            .sort(function(a, b) {
-                return d3.ascending(a.population, b.population);
-                // return d3.descending(a.population, b.population);
-            })
-            .attr("y", function(d, i) {
-                return padding + i * (barHeight + padding);
-            })
-    }
-
-    function tabulate(columnNames, data) {
-        var table = d3.select('body').append('table');
-        var thead = table.append('thead');
-        var	tbody = table.append('tbody');
-
-        // append the header row
-        thead.append('tr')
-            .selectAll('th')
-            .data(columnNames)
-            .enter()
-            .append('th')
-            .text(function (d) { 
-            return d; 
-            });
-
-        // create a row for each object in the data
-        var rows = tbody.selectAll('tr')
-            .data(data)
-            .enter()
-            .append('tr');
-
-        // create a cell in each row for each column
-        var cells = rows.selectAll('td')
-            .data(function (row) {
-            return columnNames.map(function (columnName) {
-                return {
-                key: columnName, 
-                value: row[columnName]
-                };
-            });
-            })
-            .enter()
-            .append('td')
-            .text(function (d) { 
-            return d.value; 
-            });
-
-        return table;
-    }
-    */
+        .attr("id", function (d, i) { return d['month']; })
+        .style("fill", "steelblue")
+        .attr("x", function (d) { return xScale(d['month']); })
+        .attr("width", xScale.bandwidth())
+        .attr("y", function (d) { return yScale(d['cases']); })
+        .attr("height", function (d) { return height - yScale(d['cases']) });
 }
+
+// Update for the selected state
+// function update_barChart(selected_state) {
+//     draw_barChart(dataset, selected_state);
+// }
