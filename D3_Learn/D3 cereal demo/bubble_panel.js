@@ -61,7 +61,7 @@ function load_csvdata(error, dataset) {
     for (const [key, value] of Object.entries(brand_ids)) {
     	hier_data["children"].push({"BrandName":key, "Count":value.length});
     }
-
+    console.log(hier_data);
 
 	var diameter = 380;
 	var color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -96,7 +96,7 @@ function load_csvdata(error, dataset) {
         .text(function(d) {
             return d.Name + ": " + d.Count;
         });
- 
+    console.log(bubble(nodes).descendants());
 
     node.append("circle")
         .attr("r", function(d) { return d.r; })

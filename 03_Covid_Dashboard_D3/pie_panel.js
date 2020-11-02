@@ -1,11 +1,11 @@
-var bar_svg;
+var pie_svg;
 
 function draw_pieChart(state_data) {
 
     // Set up: margins
     var margin = { top: 10, right: 20, bottom: 135, left: 60 },
-        width = 680 - margin.left - margin.right,
-        height = 460 - margin.top - margin.bottom;
+        width = 600 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
 
     // var xScale = d3.scaleBand()
     //     .domain(state_data.map(function (d) { return d['month']; }))
@@ -30,11 +30,11 @@ function draw_pieChart(state_data) {
     //     .append("g").enter()
     //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    bar_svg = d3.select("svg")
+    pie_svg = d3.select('#pie_svg').append('svg')
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
-        .attr("transform", "translate(" + 300 + "," + 110 + ")");
+        .attr("transform", "translate(" + 300 + "," + 180 + ")");
 
 
     // append x axis
@@ -62,29 +62,26 @@ function draw_pieChart(state_data) {
         });
 
     var arcData = pieGenerator(state_data);
-
-    console.log(arcData);
+    var color = d3.scaleOrdinal(d3.schemeCategory10)
+    //console.log(arcData);
 
 
     var arcGenerator = d3.arc()
-        .innerRadius(20)
-        .outerRadius(100);
+        .innerRadius(60)
+        .outerRadius(160);
 
 
-    d3.select('g')
-        .selectAll()
+    pie_svg.selectAll('path')
         .data(arcData)
         .enter()
         .append('path')
-        .attr("id", function (d, i) { return d.data.month})
+        .attr("id", function (d, i) { return d.data.month })
         .attr('d', arcGenerator)
-        .attr('fill', 'orange');
-
+        .attr("fill", function (d, i) { return color(i); });
 
 
     // Labels
-    d3.select('g')
-        .selectAll('text')
+    pie_svg.append('g').selectAll('text')
         .data(arcData)
         .enter()
         .append('text')
@@ -93,12 +90,41 @@ function draw_pieChart(state_data) {
             d3.select(this)
                 .attr('x', centroid[0])
                 .attr('y', centroid[1])
-                .attr('dy', '0.33em')
+                .attr('dy', '0.2em')
                 .text(d.data.month);
-        });
+        })
+        .attr('fill', 'white')
+        .attr('text-anchor', 'middle');
+
+    pie_svg.append('g').selectAll('text')
+        .data(arcData)
+        .enter()
+        .append('text')
+        .each(function (d) {
+            var centroid = arcGenerator.centroid(d);
+            d3.select(this)
+                .attr('x', centroid[0])
+                .attr('y', centroid[1])
+                .attr('dy', '1.2em')
+                .text(d.data.cases);
+        })
+        .attr('fill', 'white')
+        .attr('text-anchor', 'middle');
+    
+    pie_svg.append('g')
+
+        .append('text')
+        .text(selected_state)
+        .style("text-anchor", "middle")
+        .attr("dy", "0.3em")
+        .attr("font-size", 20)
+        .attr('fill', 'black');
 }
 
 // Update for the selected state
-// function update_barChart(selected_state) {
-//     draw_barChart(dataset, selected_state);
-// }
+function update_pieChart(state_data) {
+    d3.select('#pie_svg')
+        .select('svg')
+        .remove();
+    draw_pieChart(state_data);
+}

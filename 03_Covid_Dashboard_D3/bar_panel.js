@@ -3,9 +3,9 @@ var bar_svg;
 function draw_barChart(state_data) {
 
     // Set up: margins
-    var margin = { top: 10, right: 20, bottom: 135, left: 60 },
-        width = 680 - margin.left - margin.right,
-        height = 460 - margin.top - margin.bottom;
+    var margin = { top: 0, right: 20, bottom: 135, left: 60 },
+        width = 600 - margin.left - margin.right,
+        height = 450 - margin.top - margin.bottom;
 
     var xScale = d3.scaleBand()
         .domain(state_data.map(function (d) { return d['month']; }))
@@ -30,7 +30,7 @@ function draw_barChart(state_data) {
     //     .append("g").enter()
     //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    bar_svg = d3.select("svg")
+    bar_svg = d3.select('#bar_svg').append('svg')
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
@@ -68,6 +68,9 @@ function draw_barChart(state_data) {
 }
 
 // Update for the selected state
-// function update_barChart(selected_state) {
-//     draw_barChart(dataset, selected_state);
-// }
+function update_barChart(state_data) {
+    d3.select('#bar_svg')
+        .select('svg')
+        .remove();
+    draw_barChart(state_data);
+}
