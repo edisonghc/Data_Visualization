@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+		<title>Lab3 - Visualization with D3</title>
+		<script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+		  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+		  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+		  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+		  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.13.0/d3-legend.js"></script>
+		<style>
+			#state-table {
+				margin-top: 100px;
+			}
+			#table_svg {
+				height: 350px; 
+				overflow: scroll;
+			}
+			/* table style */
+			table {
+				text-align: center;
+			}
+			th, td {
+			    border-bottom: 1px solid #ddd;
+			}
+			th {
+			    background-color: #4682b4;
+			    color: white;
+			}
+			tr:nth-child(even) {background-color: #f2f2f2;}
+			tr:hover {background-color: #FFA500;}
+		</style>
+
+</head>
+<body>
+<div class="container-fluid">
+	<div class="row">
+	  <div class="col-md-7">
+	  	<div id="map_svg"></div> <!-- US-State Map -->
+	  </div>
+	  <div id="state-table" class="col-md-5">
+	  	<div id="table_svg"></div> <!-- State Table -->
+	  </div>
+	</div>
+	<br>
+	<div class="row">
+	  <div class="col-md-4">
+	  	<div id="bar_svg"></div> <!-- bar chart -->
+	  </div>
+	  <div class="col-md-4">
+	  	<div id="pie_svg"></div> <!-- pie chart -->
+	  </div>
+	  <div class="col-md-4">
+	  	<div id="bubble_svg"></div> <!-- circle packing -->
+	  </div>
+	</div>
+	<br>
+</div>
+	<script type="text/javascript" src="JS/stateToAbbr.js"></script>
+	<script type="text/javascript" src="JS/process_data.js"></script>
+	<script type="text/javascript" src="JS/map_panel.js"></script>
+	<script type="text/javascript" src="JS/table_panel.js"></script>
+	<script type="text/javascript" src="JS/bar_panel.js"></script>
+	<script type="text/javascript" src="JS/pie_panel.js"></script>
+	<script type="text/javascript" src="JS/bubble_panel.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
